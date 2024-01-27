@@ -11,7 +11,7 @@
 export default function registerServiceWorker() {
     if (process.env.NODE_ENV === 'production' && 'serviceWorker' in navigator) {
       window.addEventListener('load', () => {
-        const swUrl = `http://localhost:3000/service-worker.js`;
+        const swUrl = `https://testpwa-green.vercel.app/service-worker.js`;
         navigator.serviceWorker
           .register(swUrl)
           .then(registration => {
