@@ -12,8 +12,7 @@ import WebPush from "./WebPush";
 import { payloadFromSubscription } from "./Utility";
 
 const applicationServerPublicKey =
-  "AAAAYNO8FYU:APA91bF7lXpHQJ8wkq8HL6J08QXl9XTa7l98iz9bMeNIUDCY5b7-XSd4kYMkTHE0lDQi5cykdGrP_Fcfbu2Wq_E1rtbyuUYeEsEO9lDa5Rmq7SUbkqFJnlaXQhKt8U0T1-xLkiA-rDpQ";
-
+  "BFsaZrBJbJ_nKIutcE-aVqd_CI8HT00ZczCf-PPMlPVOe91AYx1Wv0MxYDyvjIvJPpUeBhfmPzmkbhH9G8V64-Y";
 const App = () => {
   const [subscriveUserEnabled, setSubscribeUserEnabled] = useState(false);
   const [subscription, setSubscription] = useState({ endpoint: "" });

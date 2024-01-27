@@ -1,62 +1,45 @@
-import React, { Component } from "react";
+import React, { useEffect, useState } from "react";
 import PropTypes from "prop-types";
 
 import { urlB64ToUint8Array } from "./Utility";
 
-var swRegistration = null;
+let swRegistration = null;
 
-class WebPush extends Component {
-  constructor(props) {
-    super(props);
-
-    this.onRegisterServiceWorker = this.onRegisterServiceWorker.bind(this);
-    this.onSubscribeUser = this.onSubscribeUser.bind(this);
-  }
-
-  componentWillMount() {
-    if (swRegistration == null) {
-      this.onRegisterServiceWorker();
-    }
-  }
-
-  componentWillReceiveProps(nextProps) {
-    if (
-      this.props.subscriveUserEnabled !== nextProps.subscriveUserEnabled &&
-      nextProps.subscriveUserEnabled
-    ) {
-      this.onSubscribeUser();
-    }
-  }
-
-  onSubscribeUser() {
+const WebPush = ({
+  subscriveUserEnabled,
+  applicationServerPublicKey,
+  onUpdateSubscriptionOnServer,
+  onSubscribeFailed,
+}) => {
+  const onSubscribeUser = () => {
     if (swRegistration == null) {
       return;
     }
 
-    var onUpdateSubscriptionOnServer = this.props.onUpdateSubscriptionOnServer;
-    var onSubscribeFailed = this.props.onSubscribeFailed;
-    var applicationServerPublicKey = this.props.applicationServerPublicKey;
-
-    swRegistration.pushManager.getSubscription().then(function (subscription) {
-      var isSubscribed = !(subscription === null);
+    swRegistration.pushManager.getSubscription().then((subscription) => {
+      const isSubscribed = !(subscription === null);
       if (isSubscribed) {
         onUpdateSubscriptionOnServer(subscription);
+        console.log("subscribe");
       } else {
         const applicationServerKey = urlB64ToUint8Array(
           applicationServerPublicKey
         );
+        // console.log("key", applicationServerKey);
+        // console.log("key ",applicationServerKey)
+        // console.log("swReg",swRegistration)
         swRegistration.pushManager
           .subscribe({
             userVisibleOnly: true,
             applicationServerKey: applicationServerKey,
           })
-          .then(function (subscription) {
+          .then((subscription) => {
             console.log("User is subscribed.");
             if (onUpdateSubscriptionOnServer) {
               onUpdateSubscriptionOnServer(subscription);
             }
           })
-          .catch(function (err) {
+          .catch((err) => {
             console.log("Failed to subscribe the user: ", err);
             if (onSubscribeFailed) {
               onSubscribeFailed(err);
@@ -64,20 +47,32 @@ class WebPush extends Component {
           });
       }
     });
-  }
+  };
 
-  onRegisterServiceWorker() {
-    navigator.serviceWorker.register("firebase-messaging-sw.js").then(function (swReg) {
-      console.log("Service Worker is registered", swReg);
+  const onRegisterServiceWorker = () => {
+    navigator.serviceWorker
+      .register("firebase-messaging-sw.js")
+      .then((swReg) => {
+        console.log("Service Worker is registered", swReg);
+        swRegistration = swReg;
+        onSubscribeUser();
+      });
+  };
 
-      swRegistration = swReg;
-    });
-  }
+  useEffect(() => {
+    if (swRegistration === null) {
+      onRegisterServiceWorker();
+    }
+  }, []);
 
-  render() {
-    return <div></div>;
-  }
-}
+  useEffect(() => {
+    if (subscriveUserEnabled) {
+      onSubscribeUser();
+    }
+  }, [subscriveUserEnabled]);
+
+  return <div></div>;
+};
 
 WebPush.propTypes = {
   subscriveUserEnabled: PropTypes.bool.isRequired,
