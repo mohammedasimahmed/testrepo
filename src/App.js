@@ -16,6 +16,7 @@ const applicationServerPublicKey =
 const App = () => {
   const [subscriveUserEnabled, setSubscribeUserEnabled] = useState(false);
   const [subscription, setSubscription] = useState({ endpoint: "" });
+  const [tok,setTok] = useState("")
 
   const onWebPushToggle = () => {
     setSubscribeUserEnabled(!subscriveUserEnabled);
@@ -39,6 +40,7 @@ const App = () => {
         vapidKey:
           "BJ6HHwwCBTSBsm7xvX3x_5k5lDpMpmwLKksLGeN1k9oUBW9ohRdsO7-VwXmimx9U3yvN6a6nmQ1lmwWeLRbTHgU",
       });
+      setTok(token)
       console.log("Token Gen", token);
       // Send this token  to server ( db)
     } else if (permission === "denied") {
@@ -66,7 +68,7 @@ const App = () => {
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/users" element={<Users />} />
-        <Route path="/" element={<Home />} />
+        <Route path="/" element={<Home tok={tok} />} />
       </Routes>
     </BrowserRouter>
     // <div></div>

@@ -12,7 +12,7 @@ export default function registerServiceWorker() {
   // process.env.NODE_ENV === "production" && 
   if ("serviceWorker" in navigator) {
     window.addEventListener("load", () => {
-      const swUrl = `https://testpwa-green.vercel.app/firebase-messaging-sw.js`;
+      const swUrl = `http://localhost:3000/firebase-messaging-sw.js`;
       navigator.serviceWorker
         .register(swUrl)
         .then((registration) => {

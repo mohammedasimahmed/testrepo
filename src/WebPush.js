@@ -11,13 +11,15 @@ const WebPush = ({
   onUpdateSubscriptionOnServer,
   onSubscribeFailed,
 }) => {
-  const onSubscribeUser = () => {
+  const onSubscribeUser = async () => {
     if (swRegistration == null) {
       return;
     }
-
-    navigator.serviceWorker.ready.then((serviceWorkerReg) => {
-      serviceWorkerReg.pushManager.getSubscription().then((subscription) => {
+    const readyServiceWorker = await navigator.serviceWorker.ready;
+    console.log("readyServiceWorker", readyServiceWorker);
+    readyServiceWorker.pushManager
+      .getSubscription()
+      .then(async (subscription) => {
         const isSubscribed = !(subscription === null);
         if (isSubscribed) {
           onUpdateSubscriptionOnServer(subscription);
@@ -29,41 +31,50 @@ const WebPush = ({
           // console.log("key", applicationServerKey);
           console.log("key ", applicationServerKey);
           // console.log("swReg",serviceWorkerReg)
-          serviceWorkerReg.pushManager
-            .subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: applicationServerKey,
-            })
-            .then((subscription) => {
-              console.log("User is subscribed.");
-              if (onUpdateSubscriptionOnServer) {
-                onUpdateSubscriptionOnServer(subscription);
+          try {
+            const subscription = await readyServiceWorker.pushManager.subscribe(
+              {
+                userVisibleOnly: true,
+                applicationServerKey: applicationServerKey,
               }
-            })
-            .catch((err) => {
-              console.log("Failed to subscribe the user: ", err);
-              if (onSubscribeFailed) {
-                onSubscribeFailed(err);
-              }
-            }
             );
+            console.log("User is subscribed.");
+            if (onUpdateSubscriptionOnServer) {
+              onUpdateSubscriptionOnServer(subscription);
+            }
+          } catch (err) {
+            console.log("Failed to subscribe the user: ", err);
+            if (onSubscribeFailed) {
+              onSubscribeFailed(err);
+            }
+          }
         }
       });
-    });
   };
 
+  const onRegisterServiceWorker = async () => {
+    try {
+      const swReg = await navigator.serviceWorker.register(
+        "firebase-messaging-sw.js"
+      );
 
-  const onRegisterServiceWorker = () => {
-    navigator.serviceWorker
-      .register("firebase-messaging-sw.js")
-      .then((swReg) => {
-        console.log("Service Worker is registered", swReg);
+      if (swReg.active) {
         swRegistration = swReg;
         onSubscribeUser();
-      });
+
+        // console.log('Service worker active');
+      } else {
+        console.log("not active");
+      }
+
+      console.log("Service Worker is registered", swReg);
+    } catch (error) {
+      console.log("service worker not registered", error);
+    }
   };
 
   useEffect(() => {
+    
     if (swRegistration === null) {
       onRegisterServiceWorker();
     }
