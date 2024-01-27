@@ -12,7 +12,7 @@ import WebPush from "./WebPush";
 import { payloadFromSubscription } from "./Utility";
 
 const applicationServerPublicKey =
-  "BFsaZrBJbJ_nKIutcE-aVqd_CI8HT00ZczCf-PPMlPVOe91AYx1Wv0MxYDyvjIvJPpUeBhfmPzmkbhH9G8V64-Y";
+  "BJ6HHwwCBTSBsm7xvX3x_5k5lDpMpmwLKksLGeN1k9oUBW9ohRdsO7-VwXmimx9U3yvN6a6nmQ1lmwWeLRbTHgU";
 const App = () => {
   const [subscriveUserEnabled, setSubscribeUserEnabled] = useState(false);
   const [subscription, setSubscription] = useState({ endpoint: "" });
@@ -38,7 +38,7 @@ const App = () => {
       // Generate Token
       const token = await getToken(messaging, {
         vapidKey:
-          "BFsaZrBJbJ_nKIutcE-aVqd_CI8HT00ZczCf-PPMlPVOe91AYx1Wv0MxYDyvjIvJPpUeBhfmPzmkbhH9G8V64-Y",
+          "BJ6HHwwCBTSBsm7xvX3x_5k5lDpMpmwLKksLGeN1k9oUBW9ohRdsO7-VwXmimx9U3yvN6a6nmQ1lmwWeLRbTHgU",
       });
       console.log("Token Gen", token);
       // Send this token  to server ( db)

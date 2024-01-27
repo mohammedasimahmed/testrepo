@@ -16,36 +16,39 @@ const WebPush = ({
       return;
     }
 
-    swRegistration.pushManager.getSubscription().then((subscription) => {
-      const isSubscribed = !(subscription === null);
-      if (isSubscribed) {
-        onUpdateSubscriptionOnServer(subscription);
-        console.log("subscribe");
-      } else {
-        const applicationServerKey = urlB64ToUint8Array(
-          applicationServerPublicKey
-        );
-        // console.log("key", applicationServerKey);
-        // console.log("key ",applicationServerKey)
-        // console.log("swReg",swRegistration)
-        swRegistration.pushManager
-          .subscribe({
-            userVisibleOnly: true,
-            applicationServerKey: applicationServerKey,
-          })
-          .then((subscription) => {
-            console.log("User is subscribed.");
-            if (onUpdateSubscriptionOnServer) {
-              onUpdateSubscriptionOnServer(subscription);
+    navigator.serviceWorker.ready.then((serviceWorkerReg) => {
+      serviceWorkerReg.pushManager.getSubscription().then((subscription) => {
+        const isSubscribed = !(subscription === null);
+        if (isSubscribed) {
+          onUpdateSubscriptionOnServer(subscription);
+          console.log("subscribe");
+        } else {
+          const applicationServerKey = urlB64ToUint8Array(
+            "BCqznwH9GwbNSpEFCtHjb49HP4aI_XreNTszUPqlQy24l1eueVgU_JysP5f8AjF2QxHg6EKvbSwGUKqqx8WQ4OI"
+          );
+          // console.log("key", applicationServerKey);
+          console.log("key ", applicationServerKey);
+          // console.log("swReg",serviceWorkerReg)
+          serviceWorkerReg.pushManager
+            .subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: applicationServerKey,
+            })
+            .then((subscription) => {
+              console.log("User is subscribed.");
+              if (onUpdateSubscriptionOnServer) {
+                onUpdateSubscriptionOnServer(subscription);
+              }
+            })
+            .catch((err) => {
+              console.log("Failed to subscribe the user: ", err);
+              if (onSubscribeFailed) {
+                onSubscribeFailed(err);
+              }
             }
-          })
-          .catch((err) => {
-            console.log("Failed to subscribe the user: ", err);
-            if (onSubscribeFailed) {
-              onSubscribeFailed(err);
-            }
-          });
-      }
+            );
+        }
+      });
     });
   };
 
