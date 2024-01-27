@@ -5,7 +5,7 @@ import Users from "./Users";
 import { messaging } from "./firebase";
 import "./App.css";
 
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { getToken } from "firebase/messaging";
 
 const App = () => {
@@ -28,6 +28,11 @@ const App = () => {
   }, []);
   return (
     <BrowserRouter>
+    <div>
+      <Link to={"/"}>Home</Link>
+      <Link to={"/about"}>About</Link>
+      <Link to={"/users"}>Users</Link>
+    </div>
       <Routes>
         <Route path="/about" element={<About />} />
         <Route path="/users" element={<Users />} />
