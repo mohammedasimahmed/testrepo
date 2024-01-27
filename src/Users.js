@@ -38,7 +38,7 @@ export default function Users() {
           </tr>
         </thead>
         <tbody>
-          {data.map((item ,idx) => (
+          {data.map((item, idx) => (
             <tr key={idx}>
               <td>{item.id}</td>
               <td>{item.name}</td>
