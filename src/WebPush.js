@@ -24,7 +24,7 @@ const WebPush = ({
           console.log("subscribe");
         } else {
           const applicationServerKey = urlB64ToUint8Array(
-            "BCqznwH9GwbNSpEFCtHjb49HP4aI_XreNTszUPqlQy24l1eueVgU_JysP5f8AjF2QxHg6EKvbSwGUKqqx8WQ4OI"
+            "BJ6HHwwCBTSBsm7xvX3x_5k5lDpMpmwLKksLGeN1k9oUBW9ohRdsO7-VwXmimx9U3yvN6a6nmQ1lmwWeLRbTHgU"
           );
           // console.log("key", applicationServerKey);
           console.log("key ", applicationServerKey);
@@ -52,6 +52,7 @@ const WebPush = ({
     });
   };
 
+
   const onRegisterServiceWorker = () => {
     navigator.serviceWorker
       .register("firebase-messaging-sw.js")
@@ -68,11 +69,11 @@ const WebPush = ({
     }
   }, []);
 
-  useEffect(() => {
-    if (subscriveUserEnabled) {
-      onSubscribeUser();
-    }
-  }, [subscriveUserEnabled]);
+  // useEffect(() => {
+  //   if (subscriveUserEnabled) {
+  //     onSubscribeUser();
+  //   }
+  // }, [subscriveUserEnabled]);
 
   return <div></div>;
 };

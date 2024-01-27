@@ -17,14 +17,11 @@ const payloadFromSubscription = function (subscription) {
 
 const urlB64ToUint8Array = function (base64String) {
   try {
-    const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
-    const base64 = (base64String + padding)
-      .replace(/\-/g, "+")
-      .replace(/_/g, "/");
+    const normalizedBase64 = base64String.replace(/-/g, '+').replace(/_/g, '/');
+    const paddedBase64 = normalizedBase64 + '=='.substring(0, (4 - normalizedBase64.length % 4) % 4);
 
-    const rawData = new TextDecoder().decode(
-      Uint8Array.from([...base64].map((c) => c.charCodeAt(0)))
-    );
+
+    const rawData = window.atob(paddedBase64);
 
     const outputArray = new Uint8Array(rawData.length);
 

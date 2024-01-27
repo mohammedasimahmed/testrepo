@@ -20,7 +20,6 @@ const App = () => {
   const onWebPushToggle = () => {
     setSubscribeUserEnabled(!subscriveUserEnabled);
   };
-
   const onUpdateSubscriptionOnServer = (newSubscription) => {
     console.log("onUpdateSubscriptionOnServer:", newSubscription);
     const payload = payloadFromSubscription(newSubscription);
